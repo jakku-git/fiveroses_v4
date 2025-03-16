@@ -1,42 +1,35 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { Inter } from "next/font/google"
-import "./globals.css"
-import Link from "next/link"
-import { Menu, X } from "lucide-react"
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
+import type React from "react";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import Link from "next/link";
+import { Menu, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"] });
 
 function CustomCursor() {
-  const [position, setPosition] = useState({ x: 0, y: 0 })
-  const [isPointer, setIsPointer] = useState(false)
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isPointer, setIsPointer] = useState(false);
 
   useEffect(() => {
-    const updatePosition = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY })
-    }
-
-    const updateCursorType = () => {
-      const hoveredElement = document.elementFromPoint(position.x, position.y)
+    const moveHandler = (e: MouseEvent) => {
+      const { clientX, clientY } = e;
+      setPosition({ x: clientX, y: clientY });
+      const hoveredElement = document.elementFromPoint(clientX, clientY);
       setIsPointer(
         hoveredElement?.tagName === "A" ||
           hoveredElement?.tagName === "BUTTON" ||
           hoveredElement?.closest("a") !== null ||
-          hoveredElement?.closest("button") !== null,
-      )
-    }
+          hoveredElement?.closest("button") !== null
+      );
+    };
 
-    window.addEventListener("mousemove", updatePosition)
-    window.addEventListener("mousemove", updateCursorType)
-
-    return () => {
-      window.removeEventListener("mousemove", updatePosition)
-      window.removeEventListener("mousemove", updateCursorType)
-    }
-  }, [position])
+    window.addEventListener("mousemove", moveHandler);
+    return () => window.removeEventListener("mousemove", moveHandler);
+  }, []); // Add listener only once on mount
 
   return (
     <>
@@ -47,7 +40,7 @@ function CustomCursor() {
           y: position.y - 10,
           scale: isPointer ? 0.5 : 1,
         }}
-        transition={{ type: "spring", damping: 20, stiffness: 300, mass: 0.5 }}
+        transition={{ type: "tween", duration: 0 }} // Instant movement
       />
       <motion.div
         className="custom-cursor cursor-outline"
@@ -56,27 +49,29 @@ function CustomCursor() {
           y: position.y - 20,
           scale: isPointer ? 1.5 : 1,
         }}
-        transition={{ type: "spring", damping: 15, stiffness: 150, mass: 0.8 }}
+        transition={{ type: "tween", duration: 0 }} // Instant movement
       />
     </>
-  )
+  );
 }
 
 function Header() {
-  const [isScrolled, setIsScrolled] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
-    }
+      setIsScrolled(window.scrollY > 50);
+    };
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "bg-black/90 backdrop-blur-sm" : "bg-transparent"}`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled ? "bg-black/90 backdrop-blur-sm" : "bg-transparent"
+      }`}
     >
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-light tracking-tighter">
@@ -99,11 +94,11 @@ function Header() {
         <MobileNav />
       </div>
     </header>
-  )
+  );
 }
 
 function MobileNav() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   const menuVariants = {
     closed: {
@@ -122,7 +117,7 @@ function MobileNav() {
         ease: [0.22, 1, 0.36, 1],
       },
     },
-  }
+  };
 
   const linkVariants = {
     closed: {
@@ -138,7 +133,7 @@ function MobileNav() {
         ease: [0.22, 1, 0.36, 1],
       },
     }),
-  }
+  };
 
   return (
     <div className="md:hidden">
@@ -172,7 +167,7 @@ function MobileNav() {
         </nav>
       </motion.div>
     </div>
-  )
+  );
 }
 
 function Footer() {
@@ -182,14 +177,21 @@ function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
             <h3 className="text-2xl font-light tracking-tighter">fiveroses</h3>
-            <p className="text-sm text-neutral-400">Full-service marketing agency helping your business bloom.</p>
+            <p className="text-sm text-neutral-400">
+              Full-service marketing agency helping your business bloom.
+            </p>
           </div>
 
           <div>
-            <h4 className="text-sm font-medium mb-4 uppercase tracking-wider">Services</h4>
+            <h4 className="text-sm font-medium mb-4 uppercase tracking-wider">
+              Services
+            </h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/work/marketing" className="text-sm text-neutral-400 hover:text-white transition-colors">
+                <Link
+                  href="/work/marketing"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors"
+                >
                   Marketing
                 </Link>
               </li>
@@ -210,7 +212,10 @@ function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/work/incubator" className="text-sm text-neutral-400 hover:text-white transition-colors">
+                <Link
+                  href="/work/incubator"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors"
+                >
                   Startup Incubator
                 </Link>
               </li>
@@ -218,20 +223,31 @@ function Footer() {
           </div>
 
           <div>
-            <h4 className="text-sm font-medium mb-4 uppercase tracking-wider">Company</h4>
+            <h4 className="text-sm font-medium mb-4 uppercase tracking-wider">
+              Company
+            </h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/about" className="text-sm text-neutral-400 hover:text-white transition-colors">
+                <Link
+                  href="/about"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors"
+                >
                   About
                 </Link>
               </li>
               <li>
-                <Link href="/news" className="text-sm text-neutral-400 hover:text-white transition-colors">
+                <Link
+                  href="/news"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors"
+                >
                   News
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-sm text-neutral-400 hover:text-white transition-colors">
+                <Link
+                  href="/contact"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors"
+                >
                   Contact
                 </Link>
               </li>
@@ -239,20 +255,31 @@ function Footer() {
           </div>
 
           <div>
-            <h4 className="text-sm font-medium mb-4 uppercase tracking-wider">Connect</h4>
+            <h4 className="text-sm font-medium mb-4 uppercase tracking-wider">
+              Connect
+            </h4>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-sm text-neutral-400 hover:text-white transition-colors">
+                <a
+                  href="#"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors"
+                >
                   Instagram
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-neutral-400 hover:text-white transition-colors">
+                <a
+                  href="#"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors"
+                >
                   Twitter
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-neutral-400 hover:text-white transition-colors">
+                <a
+                  href="#"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors"
+                >
                   LinkedIn
                 </a>
               </li>
@@ -261,26 +288,34 @@ function Footer() {
         </div>
 
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-xs text-neutral-400">&copy; {new Date().getFullYear()} fiveroses. All rights reserved.</p>
+          <p className="text-xs text-neutral-400">
+            &copy; {new Date().getFullYear()} fiveroses. All rights reserved.
+          </p>
           <div className="flex gap-4 mt-4 md:mt-0">
-            <Link href="/privacy" className="text-xs text-neutral-400 hover:text-white transition-colors">
+            <Link
+              href="/privacy"
+              className="text-xs text-neutral-400 hover:text-white transition-colors"
+            >
               Privacy Policy
             </Link>
-            <Link href="/terms" className="text-xs text-neutral-400 hover:text-white transition-colors">
+            <Link
+              href="/terms"
+              className="text-xs text-neutral-400 hover:text-white transition-colors"
+            >
               Terms of Service
             </Link>
           </div>
         </div>
       </div>
     </footer>
-  )
+  );
 }
 
 export default function ClientLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body className={`${inter.className} bg-black text-white`}>
@@ -290,6 +325,5 @@ export default function ClientLayout({
         <Footer />
       </body>
     </html>
-  )
+  );
 }
-
