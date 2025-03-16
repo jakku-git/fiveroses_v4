@@ -154,7 +154,7 @@ export const GithubGlobe = () => {
             const opacity =
               conn.opacity *
               Math.min((fromPoint.z + radius) / (2 * radius), ((toPoint.z + radius) / (2 * radius)) * radius)
-            \
+            
             )
 
             ctx.strokeStyle = `rgba(255, 182, 193, $
