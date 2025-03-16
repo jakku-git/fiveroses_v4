@@ -151,15 +151,15 @@ export const GithubGlobe = () => {
 
           // Only draw connections for visible points
           if (fromPoint.z > -radius && toPoint.z > -radius) {
-            const opacity =
-              conn.opacity *
-              Math.min((fromPoint.z + radius) / (2 * radius), ((toPoint.z + radius) / (2 * radius)) * radius)
-            
-            )
+            const opacity = 
+  conn.opacity *
+  Math.min(
+    (fromPoint.z + radius) / (2 * radius),
+    ((toPoint.z + radius) / (2 * radius)) * radius
+  );
 
-            ctx.strokeStyle = `rgba(255, 182, 193, $
-            opacity * 0.3
-            )`
+ctx.strokeStyle = `rgba(255, 182, 193, ${opacity * 0.3})`;
+
             ctx.beginPath()
             ctx.moveTo(x1, y1)
             ctx.lineTo(x2, y2)
